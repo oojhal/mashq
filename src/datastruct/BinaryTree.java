@@ -10,8 +10,8 @@ import java.util.stream.IntStream;
 public class BinaryTree<T> {
     T val;
     int nodeid;
-    BinaryTree leftChild;
-    BinaryTree rightChild;
+    BinaryTree<T> leftChild;
+    BinaryTree<T> rightChild;
     boolean visited;
     public BinaryTree(){
 
@@ -51,6 +51,7 @@ public class BinaryTree<T> {
     public void visitInOrder(Visitor vstor, VisitedData vsd) {
         visitInOrder(this, vstor, vsd);
     }
+
     public void visitInOrder(BinaryTree node, Visitor vstor, VisitedData vsd) {
         if(node!=null) {
             visitInOrder(node.leftChild, vstor,vsd);

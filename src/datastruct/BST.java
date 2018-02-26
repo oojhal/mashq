@@ -63,6 +63,14 @@ public class BST<T> extends BinaryTree<T> {
         }, vsd);
         System.out.println(vsd);
         System.out.println("*************************************");
+        vsd = new VisitedData<Integer>();
+        BST<Integer> btnew = new BST<Integer>();
+        bt.bFS((VisitedData vData, BinaryTree tr)-> {
+            vData.visitStr.append(System.lineSeparator()+"visited node id= "+tr.nodeid+" with value= "+tr.val);
+            btnew.val = new Integer(6);
+            vData.visitVals.add(tr.val);
+        }, vsd);
+        System.out.println(btnew.val);
        // bt.bFS();
     }
 }
