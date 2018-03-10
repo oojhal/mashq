@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Created by ssiddiqu on 1/27/18.
  */
-public class dynamic {
+public class DynamicFib {
     static int callCnt=0;
     public static int fib(int n) {
         int ret=0;
