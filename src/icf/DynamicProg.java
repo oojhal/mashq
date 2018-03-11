@@ -9,6 +9,8 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.IntStream;
 
+import static java.util.stream.Collectors.toList;
+
 /**
  * Created by ssiddiqu on 3/3/18.
  */
@@ -802,6 +804,73 @@ public class DynamicProg {
         }
         return numWays[numStairs];
     }
+    public static List<List<Integer>> minCoinsForMakingChange(int[] coinVals, int amount) {
+        // minWays[i] = lists of min coins that can make value i
+        // numWays[amount] = lists of min coins that can make value amount
+        // coinVals array contains values of allowed coins
+        List<List<Integer>>[] minWays = new ArrayList[amount+1];
+        // no coins to make value 0
+        minWays[0] = new ArrayList<>();
+        for(int currAmount = 1; currAmount<= amount; currAmount++) {
+            List<List<Integer>> minCoinLists = null;
+            for(int coinVal:coinVals) {
+                int prevVal = currAmount- coinVal;
+                // reached the currAmount using a singleCoin of coinVal
+                // that's the shortest way. No need to check any further
+                if(prevVal == 0) {
+                    // create an empty list
+                    minCoinLists = new ArrayList(Arrays.asList(new ArrayList(Arrays.asList(coinVal))));
+                    break;
+                }
+                else if(prevVal > 0) {
+                    List<List<Integer>> prevValCoinLists = minWays[prevVal];
+                    // get the min list of coins to reach prevVal. if such a list exits
+                    // i.e. there is a way to use the coins to reach prevVal
+                    if((prevValCoinLists!=null)&&(!prevValCoinLists.isEmpty())) {
+                        // compare the number of coins with the prevMin number of coins
+                        if((minCoinLists == null)||(minCoinLists.isEmpty())) {
+                            // initialize minCoinsList
+                            minCoinLists = new ArrayList();
+                            for(List<Integer> prevCoinList: prevValCoinLists) {
+                                List<Integer> lst = new ArrayList(prevCoinList);
+                                lst.add(coinVal);
+                                minCoinLists.add(lst);
+                            }
+                        }
+                        // minCoins is not null
+                        else if (minCoinLists.get(0).size()==prevValCoinLists.get(0).size()+1) {
+                            for(List<Integer> prevCoinList: prevValCoinLists) {
+                                List<Integer> lst = new ArrayList(prevCoinList);
+                                lst.add(coinVal);
+                                minCoinLists.add(lst);
+                            }
+                        }
+                        else if (minCoinLists.get(0).size()> prevValCoinLists.get(0).size()+1) {
+                            minCoinLists = new ArrayList();
+                            for(List<Integer> prevCoinList: prevValCoinLists) {
+                                List<Integer> lst = new ArrayList(prevCoinList);
+                                lst.add(coinVal);
+                                minCoinLists.add(lst);
+                            }
+                        }
+                    }
+                }
+
+            }
+            minWays[currAmount] = minCoinLists;
+        }
+        return minWays[amount];
+    }
+    public static void testMinCoinsForMakingChange() {
+        int[] coins = new int[] {1,2,3};
+        int amount= 5;
+        System.out.println("Min coin lists to make amount "+amount+" using allowed coins: "+Arrays.toString(coins)+ " is "+minCoinsForMakingChange(coins, amount));
+        amount = 4;
+        System.out.println("Min coin lists to make amount "+amount+" using allowed coins: "+Arrays.toString(coins)+ " is "+minCoinsForMakingChange(coins, amount));
+        coins = new int[] {1,2,3};
+        amount= 5;
+        System.out.println("Min coin lists to make amount "+amount+" using allowed coins: "+Arrays.toString(coins)+ " is "+minCoinsForMakingChange(coins, amount));
+    }
     public static void testNumWaysToClimb() {
         int[] allowedSteps = new int[] {1,2};
         int numStairs = 5;
@@ -840,6 +909,7 @@ public class DynamicProg {
 //        testGetMaxCoinValMine();
 //        testMaxSizeSubMatrix();
 //        testMaxDigitsKeyPad();
-        testNumWaysToClimb();
+//        testNumWaysToClimb();
+        testMinCoinsForMakingChange();
     }
 }
