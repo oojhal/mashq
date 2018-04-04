@@ -7,6 +7,9 @@ import java.util.Arrays;
 
 /**
  * Created by ssiddiqu on 4/1/18.
+ * Good resources to understand heap:
+ * http://www.mathcs.emory.edu/~cheung/Courses/171/Syllabus/9-BinTree/
+ * https://www.cs.cmu.edu/~adamchik/15-121/lectures/Binary%20Heaps/heaps.html
  * Creates a heap of values T. The heap is stored in a list
  * with the root node at index 1.
  */
