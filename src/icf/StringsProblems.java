@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import static icf.DynamicProg.max;
+
 /**
  * Created by ssiddiqu on 2/23/18.
  */
@@ -184,7 +186,7 @@ public class StringsProblems {
 
     /**
      * Function to find smallest window in source string that contains all string in a given pattern.
-     * Input :  string = "this is a test string"
+     * Input :  string =
      * pattern = "tist"
      * Output :  Minimum window is "t stri"
      * Explanation: "t stri" contains all the characters
@@ -195,6 +197,15 @@ public class StringsProblems {
      * Output :  Minimum window is "ksfor"
      * input : "tttrrrrrri"
      * pattern: "ti"
+     * Algorithm is to store the occurrence count of each character in the pattern e.g. for the pattern tist
+     * occurrence count of t = 2, i=1, s=1
+     * Now scan the source string "this is a test string". For every character in the source, check to see if
+     * it occurs in the pattern and if the number of times it has been encountered in source so far is still less
+     * than number of times it occurs in pattern. So by the time the scan reaches the the second "t", in "this is a t", it would have
+     * matches both the t's, i and s in the pattern "tist". Now try to minimize the match window by moving the match start index
+     * forward. Match start index can be moved forward as long as the character at the index does not occur in pattern or if it does occur
+     * in pattern but the occurrenece count in source string is more than the occurrence count in pattern.
+     * Now compare the current minimum window after shrinking with the last minimum window
      *
      * @param str
      * @param pat
@@ -215,24 +226,30 @@ public class StringsProblems {
         // stores number of occurences of each character in target string
         int hash_str[] = new int[no_of_chars];
 
-        // store occurrence ofs characters of pattern
+        // store occurrence count of characters of pattern
         for (int i = 0; i < len2; i++) {
             hash_pat[pat.charAt(i)]++;
         }
 
         int start = 0;
+        // keeps track of start of the window
         int start_index = -1;
+        // keeps track of minimum length
         int min_len = Integer.MAX_VALUE;
 
-        // start traversing the string
-        int count = 0;  // count of characters
+        // count of characters that have been matched
+        int count = 0;
+        // traverse the whole string
         for (int j = 0; j < len1; j++) {
             // count occurrence of characters of string
             hash_str[str.charAt(j)]++;
 
             // If string's char matches with pattern's char
             // then increment count
-            if (hash_pat[str.charAt(j)] != 0 // there is a pattern char to match
+            // str.charAt(j) occurs in the pattern at least once
+            // and the number of times it occurs is more than the
+            // number of times it has occurred in string so far
+            if (hash_pat[str.charAt(j)] != 0
                 &&
                 hash_str[str.charAt(j)] <= hash_pat[str.charAt(j)]) {
                 count++;
@@ -360,12 +377,79 @@ public class StringsProblems {
         String input = "nailed";
         System.out.println(getNeuronyms(input));
     }
-
+    public static boolean isInterleaved(String str1, String str2, String strI) {
+        int len1= str1.length();
+        int len2= str2.length();
+        int lenI = strI.length();
+        int[] indx1 = new int[len1];
+        int[] indx2= new int[len2];
+        int maxIndx = max(len1, len2);
+        for(int i=0; i< maxIndx;i++) {
+            if(i>= strI.length()) {
+                break;
+            }
+            if(i<len1) {
+                // check for str1
+                int charIndx = firstIndexOfChar(str1.charAt(i),strI,(i==0)? 0:indx1[i-1]);
+                if(charIndx>=lenI) {
+                    return false;
+                }
+                indx1[i] = charIndx;
+            }
+            if(i<len2) {
+                // check for str1
+                int charIndx = firstIndexOfChar(str2.charAt(i),strI,(i==0)? 0:indx2[i-1]);
+                if(charIndx>=lenI) {
+                    return false;
+                }
+                indx2[i] = charIndx;
+            }
+        }
+        return ((indx1[len1-1]!=0)&&(indx2[len2-1]!=0));
+    }
+    public static void testisInterleaved() {
+        String str1= "XYA";
+        String str2="AXC";
+        String strI="AXBYCA";
+        System.out.println("String "+strI+" contains both "+str1+" and "+str2+" = "+isInterleaved(str1,str2, strI));
+        str1= "XYM";
+        str2="AXC";
+        strI="AXBYCA";
+        System.out.println("String "+strI+" contains both "+str1+" and "+str2+" = "+isInterleaved(str1,str2, strI));
+        str1= "XXY";
+        str2="XXZ";
+        strI="XXZXXXY";
+        System.out.println("String "+strI+" contains both "+str1+" and "+str2+" = "+isInterleaved(str1,str2, strI));
+        str1= "XY";
+        str2="WZ";
+        strI="WZXY";
+        System.out.println("String "+strI+" contains both "+str1+" and "+str2+" = "+isInterleaved(str1,str2, strI));
+        str1= "XY";
+        str2="X";
+        strI="XXY";
+        System.out.println("String "+strI+" contains both "+str1+" and "+str2+" = "+isInterleaved(str1,str2, strI));
+        str1 = "aabcc";
+        str2 = "dbbca";
+        strI = "aadbbbaccc";
+        System.out.println("String "+strI+" contains both "+str1+" and "+str2+" = "+isInterleaved(str1,str2, strI));
+        strI ="aadbbcbcac";
+        System.out.println("String "+strI+" contains both "+str1+" and "+str2+" = "+isInterleaved(str1,str2, strI));
+    }
+    private static int firstIndexOfChar(char chr, String strI, int start) {
+        if(start>= strI.length())
+            return start;
+        int indx=start;
+        while((indx<strI.length())&&(strI.charAt(indx)!=chr)) {
+            indx= indx+1;
+        }
+        return indx;
+    }
     public static void main(String[] args) {
 //        testGetNeuronyms();
 //        testPrintSpiral();
 //        testAlpha();
 //        testFindSubstring();
-        testMyFindSubstring();
+//        testMyFindSubstring();
+        testisInterleaved();
     }
 }

@@ -408,7 +408,7 @@ public class DynamicProg {
         return (str1.length() > str2.length()) ? str1 : str2;
     }
 
-    public static String longestSubSequence(String str1, String str2) {
+    public static String  longestSubSequence(String str1, String str2) {
         return longestSubSequence(str1, 0, str2, 0);
     }
 
@@ -576,7 +576,7 @@ public class DynamicProg {
     // Utility functions to get maximum
     // and minimum of two integers
 
-    int min(int a, int b) { return a < b ? a : b; }
+    static int min(int a, int b) { return a < b ? a : b; }
 
     // Returns optimal value possible that a player
     // can collect from an array of coins of size n.
@@ -884,6 +884,294 @@ public class DynamicProg {
             System.out.println(maxDigitsKeyPad(digits, 1) + " combinations for "+ digits+" starting at 1:" );
         }
     }
+    public static int[] largestSumSubArray(int[] nums) {
+        int currSumStart=0;
+        int maxSumStart=0;
+        int maxSumEnd = 0;
+        int maxSum = Integer.MIN_VALUE;
+        int sumUntilCurr = 0;
+        for(int i=0; i<nums.length; i++) {
+            sumUntilCurr += nums[i];
+            if(sumUntilCurr> maxSum) {
+                maxSum = sumUntilCurr;
+                maxSumStart = currSumStart;
+                maxSumEnd = i;
+            }
+            // if sum until current become -ve
+            // then it will decrease the largest
+            // sum so set it to 0
+            if(sumUntilCurr<0) {
+                sumUntilCurr = 0;
+                currSumStart = i+1;
+            }
+
+        }
+        return new int[] {maxSumStart, maxSumEnd};
+    }
+    public static void testLargestSumSubArray() {
+        int[] nums = new int[] {-2,-3,4,-1,-2,1,5, -3};
+        int[] indices = largestSumSubArray(nums);
+        int[] maxSubAray = Arrays.copyOfRange(nums, indices[0], indices[1]+1);
+        System.out.println("Max subarray in "+ Arrays.toString(nums)+" is "+Arrays.toString(maxSubAray)+" with a sum = "+ Arrays.stream(maxSubAray).sum());
+        nums = new int[]  {-2, -3, -4, -1, -2, -1, -5, -3};
+        indices = largestSumSubArray(nums);
+        maxSubAray = Arrays.copyOfRange(nums, indices[0], indices[1]+1);
+        System.out.println("Max subarray in "+ Arrays.toString(nums)+" is "+Arrays.toString(maxSubAray)+" with a sum = "+ Arrays.stream(maxSubAray).sum());
+    }
+    static int maxSubArraySum(int a[])
+    {
+        int size = a.length;
+        // keeps track of the maximum sum so far
+        int max_so_far = Integer.MIN_VALUE;
+        // keeps track of the maximum sum so far that can be used
+        // in conjunction with current number
+        // -ve value is not useful so the minimum is 0
+        int max_ending_here = 0;
+
+        for (int i = 0; i < size; i++)
+        {
+            max_ending_here = max_ending_here + a[i];
+            if (max_so_far < max_ending_here)
+                max_so_far = max_ending_here;
+            if (max_ending_here < 0)
+                max_ending_here = 0;
+        }
+        return max_so_far;
+    }
+    public static void testMaxSubArraySum() {
+        int [] a = {-2, -3, 4, -1, -2, 1, 5, -3};
+        System.out.println("Maximum contiguous sum is " +
+            maxSubArraySum(a));
+        int [] b = {-2, -3, -4, -1, -2, -1, -5, -3};
+        System.out.println("Maximum contiguous sum is " +
+            maxSubArraySum(b));
+
+    }
+    public static int minEditDistance(String str1, String str2) {
+        int sz1= str1.length()+1;
+        int sz2=str2.length()+1;
+        int[][] distance = new int[sz1][sz2];
+        String[][] inst= new String[sz1][sz2];
+        // 0 to sz1-1
+        for(int currSz1=0; currSz1<sz1; currSz1++ ) {
+            // 0 to sz2-1
+            for(int currSz2=0; currSz2<sz2; currSz2++) {
+                // row number 0, col val increase which corresponds to indx2
+                if((currSz1==0)&&(currSz2==0)) {
+                    inst[currSz1][currSz2] = "";
+                    distance[currSz1][currSz2]=0;
+                }
+                else if(currSz1==0) {
+                    final String[] ins= new String[1];
+                    ins[0] = "";
+                    str2.substring(0,currSz2).chars().forEach(c-> {ins[0] = ins[0]+"add "+c+", ";} );
+                    inst[currSz1][currSz2] = ins[0];
+                    distance[currSz1][currSz2] = currSz2;
+                }
+                else if(currSz2== 0) {
+                    final String[] ins= new String[1];
+                    ins[0] = "";
+                    str1.substring(0,currSz1).chars().forEach(c-> {ins[0] = ins[0]+"add "+c+", ";} );
+                    inst[currSz1][currSz2] = ins[0];
+                    distance[currSz1][currSz2] = currSz1;
+                }
+                else if(str1.charAt(currSz1-1)== str2.charAt(currSz2-1)) {
+                    inst[currSz1][currSz2] = inst[currSz1-1][currSz2-1];
+                    distance[currSz1][currSz2] = distance[currSz1-1][currSz2-1];
+                }
+                else {
+                    distance[currSz1][currSz2] =min(min(distance[currSz1-1][currSz2], distance[currSz1][currSz2-1]),distance[currSz1-1][currSz2-1])+1;
+                }
+            }
+        }
+        return distance[sz1-1][sz2-1];
+    }
+    public static void testMinEditDistance() {
+        String str1= "kitten";
+        String str2= "sitting";
+        System.out.println("Minimum edit distance between "+str1+" and "+str2+" is "+minEditDistance(str1, str2));
+        str1= "k";
+        str2= "k";
+        System.out.println("Minimum edit distance between "+str1+" and "+str2+" is "+minEditDistance(str1, str2));
+
+    }
+    public static boolean isInterleaved(String str1, String str2, String strI) {
+        int len1 = str1.length();
+        int len2 = str2.length();
+        // size of the arrays is one more than the length as inter[len1][len2] is true if
+        // strI.substring(0,len1+len2) is interleave of str1.substring(0,len1) and str2.substring(0,len2)
+        // e.g. inter[1][2] is true if strI.substring(0,3) is interleave str1.substring(0,1) and str2.substring(0,2)
+        // substring(0, len) has len characters as it goes from index 0 through len-1
+        boolean[][] inter = new boolean[len1+1][len2+1];
+        if(strI.length()!= str1.length()+str2.length())
+            return false;
+        for(int len1C= 0; len1C<= len1; len1C++) {
+            for(int len2C=0; len2C <= len2; len2C++) {
+                boolean isInter=true;
+                int iLen= len1C+len2C;
+                if((len1C==0)&&(len2C==0))
+                {
+                    isInter = true;
+                }
+                else if(len2C==0) {
+                    // len1 can not be 0
+                    isInter= inter[len1C-1][len2C] && (str1.charAt(len1C-1)== strI.charAt(iLen-1));
+                }
+                else if(len1C==0) {
+                    isInter= inter[len1C][len2C-1] && (str2.charAt(len2C-1)== strI.charAt(iLen-1));
+                }
+                else {
+                    //prev column and str1
+                    isInter =  (inter[len1C-1][len2C] && (str1.charAt(len1C-1)== strI.charAt(iLen-1))) || (inter[len1C][len2C-1] && (str2.charAt(len2C-1)== strI.charAt(iLen-1)));
+                }
+                inter[len1C][len2C] = isInter;
+            }
+        }
+        return inter[len1][len2];
+    }
+    public static boolean isInterleavedWrong(String str1, String str2, String strI) {
+        int len1= str1.length();
+        int len2= str2.length();
+        int lenI = strI.length();
+        int[] indx1 = new int[len1];
+        int[] indx2= new int[len2];
+        int maxIndx = max(len1, len2);
+        for(int i=0; i< maxIndx;i++) {
+            if(i>= strI.length()) {
+                break;
+            }
+            if(i<len1) {
+                // check for str1
+                int charIndx = firstIndexOfChar(str1.charAt(i),strI,(i==0)? 0:indx1[i-1]);
+                if(charIndx>=lenI) {
+                    return false;
+                }
+                indx1[i] = charIndx;
+            }
+            if(i<len2) {
+                // check for str1
+                int charIndx = firstIndexOfChar(str2.charAt(i),strI,(i==0)? 0:indx2[i-1]);
+                if(charIndx>=lenI) {
+                    return false;
+                }
+                indx2[i] = charIndx;
+            }
+        }
+        if((len1==0)&&(len2==0)) return (strI.length()==0);
+        return ((len1==0)? true:indx1[len1-1]!=0)&&((len2==0)? true:indx2[len2-1]!=0);
+    }
+    public static void testisInterleaved() {
+        String str1= "XYA";
+        String str2="AXC";
+        String strI="AXBYCA";
+        System.out.println("String "+strI+" contains both "+str1+" and "+str2+" = "+isInterleaved(str1,str2, strI));
+        str1= "XYM";
+        str2="AXC";
+        strI="AXBYCA";
+        System.out.println("String "+strI+" contains both "+str1+" and "+str2+" = "+isInterleaved(str1,str2, strI));
+        str1= "XXY";
+        str2="XXZ";
+        strI="XXZXXXY";
+        System.out.println("String "+strI+" contains both "+str1+" and "+str2+" = "+isInterleaved(str1,str2, strI));
+        str1= "XY";
+        str2="WZ";
+        strI="WZXY";
+        System.out.println("String "+strI+" contains both "+str1+" and "+str2+" = "+isInterleaved(str1,str2, strI));
+        str1= "XY";
+        str2="X";
+        strI="XXY";
+        System.out.println("String "+strI+" contains both "+str1+" and "+str2+" = "+isInterleaved(str1,str2, strI));
+        str1 = "aabcc";
+        str2 = "dbbca";
+        strI = "aadbbbaccc";
+        System.out.println("String "+strI+" contains both "+str1+" and "+str2+" = "+isInterleaved(str1,str2, strI));
+        strI ="aadbbcbcac";
+        System.out.println("String "+strI+" contains both "+str1+" and "+str2+" = "+isInterleaved(str1,str2, strI));
+        str1= "a";
+        str2="";
+        strI="a";
+        System.out.println("String "+strI+" contains both "+str1+" and "+str2+" = "+isInterleaved(str1,str2, strI));
+        str1= "a";
+        str2="b";
+        strI="a";
+        System.out.println("String "+strI+" contains both "+str1+" and "+str2+" = "+isInterleaved(str1,str2, strI));
+
+    }
+    private static int firstIndexOfChar(char chr, String strI, int start) {
+        if(start>= strI.length())
+            return start;
+        int indx=start;
+        while((indx<strI.length())&&(strI.charAt(indx)!=chr)) {
+            indx= indx+1;
+        }
+        return indx;
+    }
+    public static int pathInMatrix(int[][] matrix) {
+        // check to see null matrix, emtpy matrix or asymmetric matrix
+        int[][] pathCounts = new int[matrix.length][matrix[0].length];
+        if(matrix[0][0]!=1) {
+            return 0;
+        }
+        for(int row=0; row< matrix.length; row++) {
+            for(int col=0; col<matrix[row].length; col++) {
+                if((row==0)&&(col==0))
+                    pathCounts[row][col] =1;
+                // col can't be 0
+                else if (row==0) {
+                    // there is way to reach the previous cell and current cell is not 0
+                    pathCounts[row][col] = ((pathCounts[row][col-1]==1)&&(matrix[row][col]==1)) ? 1:0;
+                }
+                else if (col==0) {
+                    // there is way to reach the previous cell and current cell is not 0
+                    pathCounts[row][col] = ((pathCounts[row-1][col]==1)&&(matrix[row][col]==1)) ? 1:0;
+                }
+                else {
+                    pathCounts[row][col] = (matrix[row][col]==1) ? pathCounts[row-1][col]+pathCounts[row][col-1]:0;
+                }
+            }
+        }
+        return pathCounts[matrix.length-1][matrix[0].length-1];
+    }
+    public static void testPathInMatrix() {
+        int[][] matrix = new int[][] {{1,1,1,1},{1,1,1,1},{1,1,1,1}};
+        System.out.println(pathInMatrix(matrix));
+        matrix = new int[][] {{1,1},{0,1}};
+        System.out.println(pathInMatrix(matrix));
+
+
+    }
+    public static int[] ropeCut(int len) {
+        int[][] cuts= new int[len+1][];
+        // cuts[i] stores the max cuts for length i
+        // no cuts for length 0
+        cuts[0] = null;
+        cuts[1] = new int[] {1};
+        cuts[2] = new int[]{2};
+        int minCut=1;
+        for(int currLen=3; currLen<=len; currLen++ ) {
+            int maxProd = 0;
+            int[] currLens = null;
+            // no need to have length 1
+            for(int lastCut=minCut; lastCut <= currLen-minCut ; lastCut++) {
+                int[] prevCut = cuts[currLen-lastCut];
+                int currProd = Arrays.stream(prevCut).reduce(1, (a,b)-> a*b) * lastCut;
+                if(currProd>maxProd) {
+                    currLens = Arrays.copyOf(prevCut, prevCut.length+1);
+                    currLens[prevCut.length] = lastCut;
+                    maxProd = currProd;
+                }
+            }
+            cuts[currLen] = currLens;
+        }
+        return cuts[len];
+
+    }
+    public static void testRopeCut() {
+        for(int i=3; i< 15; i++) {
+            int[] maxCuts = ropeCut(i);
+            System.out.println("Max prod cuts for length "+ i+" are "+Arrays.toString(maxCuts)+" with max prod "+Arrays.stream(maxCuts).reduce(1, (a,b) -> a*b));
+        }
+    }
     public static void main(String[] args) {
 //        testfibn();
  //       testSumWays();
@@ -902,6 +1190,12 @@ public class DynamicProg {
 //        testMaxSizeSubMatrix();
 //        testMaxDigitsKeyPad();
 //        testNumWaysToClimb();
-        testMinCoinsForMakingChange();
+//        testMinCoinsForMakingChange();
+//          testMaxSubArraySum();
+//       testLargestSumSubArray();
+//        testMinEditDistance();
+//        testisInterleaved();
+//        testPathInMatrix();
+        testRopeCut();
     }
 }
