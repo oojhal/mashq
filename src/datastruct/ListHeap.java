@@ -86,6 +86,13 @@ public class ListHeap<T>{
     private int getLeftChildIndx(int curr) {
         return (curr*2);
     }
+
+    /**
+     * Compares the node values at specified indices
+     * @param indx1
+     * @param indx2
+     * @return
+     */
     public int compare(int indx1, int indx2) {
        return cmp.compare(nodeList.get(indx1).val, nodeList.get(indx2).val);
     }
@@ -131,7 +138,7 @@ public class ListHeap<T>{
             // compare with parent
             int parentIndx = getParentIndx(indx);
             // if currentNode is greater than parent then percolate up
-            if((parentIndx>=firstNodeIndex())&&(compare(indx, parentIndx)>0)) {
+            if(compare(indx, parentIndx)>0) {
                 percolateUp(indx);
             }
             else {
@@ -168,7 +175,6 @@ public class ListHeap<T>{
                 nodeIndx= parentIndx;
                 percolateUp(nodeIndx);
             }
-            // int leftChildI =
         }
     }
     /**
@@ -178,30 +184,36 @@ public class ListHeap<T>{
      * @param nodeIndx
      */
     public void percolateDown(int nodeIndx) {
-        // if the node to heapify is still with the heap boundary
+        // if the node to heapify is still within the heap boundary
         if(withinBounds(nodeIndx)) {
             Node nd = nodeList.get(nodeIndx);
             int lchildIndx = getLeftChildIndx (nodeIndx);
             int maxChildIndx=-1;
             // find the maximum child index and value
             T maxChildVal= null;
-            if(lchildIndx<=lastNodeIndex()) {
+            if(withinBounds(lchildIndx)) {
                 maxChildIndx = lchildIndx;
                 maxChildVal = nodeList.get(lchildIndx).val;
             }
             int rchildIndx = lchildIndx+1;
-            if(rchildIndx <= lastNodeIndex()) {
+            if(withinBounds(rchildIndx)) {
                 maxChildIndx = (compare(rchildIndx, maxChildIndx)>0) ? rchildIndx:maxChildIndx;
             }
-            // maximum child is at maxIndx
+            // maximum child is at maxChildIndx
             // if value at nodeIndx < maximum child is then it must percolate down
-            if((withinBounds(maxChildIndx))&&(compare(nodeIndx,maxChildIndx)<0)) {
+            if((withinBounds(maxChildIndx))&&(compare(nodeIndx, maxChildIndx)<0)) {
                 swap(nodeIndx,maxChildIndx);
                 nodeIndx= maxChildIndx;
                 percolateDown(nodeIndx);
             }
         }
     }
+
+    /**
+     * Swaps the nodes at specified indices
+     * @param indx1
+     * @param indx2
+     */
     private void swap(int indx1, int indx2) {
         if((withinBounds(indx1))&&(withinBounds(indx2))) {
             Node tmp = nodeList.get(indx1);
@@ -212,6 +224,12 @@ public class ListHeap<T>{
     public String toString() {
         return nodeList.toString();
     }
+
+    /**
+     * Get the value at root which is maximum or minimum
+     * Delete root which reheaps and brings the maximum/ minimum value on top
+     * @return
+     */
     public List<T> heapSort() {
         List<T> sorted = new ArrayList<>();
         while(size()>0) {
@@ -221,7 +239,6 @@ public class ListHeap<T>{
         return sorted;
     }
     public static void heapTest() {
-        // int[] list = {10,2,12,4,9,23};
         List<Integer> list = Arrays.asList(10,2,12,4,9,23);
         ListHeap<Integer> maxHeap = new ListHeap<Integer>(list.size(), Comparator.<Integer>naturalOrder());
         maxHeap.addVals(list);
