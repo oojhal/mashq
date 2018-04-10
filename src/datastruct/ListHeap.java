@@ -14,6 +14,7 @@ import java.util.Arrays;
  * with the root node at index 1.
  */
 public class ListHeap<T>{
+    private static int TABSIZE=3;
     public static class Node<T>{
         T val;
         public Node(T val) {
@@ -25,7 +26,7 @@ public class ListHeap<T>{
         public boolean equals(Object obj) {
             if (this == obj) {
                 return true;
-            } else if (this.getClass() != obj.getClass()) {
+            } else if ((obj== null) || (this.getClass() != obj.getClass())) {
                 return false;
             } else {
                 Node other = (Node) obj;
@@ -121,9 +122,9 @@ public class ListHeap<T>{
         }
     }
     /**
-     * deletes the node at index indx by making setting the last node
-     * at the index indx. Now this node either needs to be percolated
-     * up or down depending upon its values relative to its parents or child
+     * deletes the node at index indx by setting the last node
+     * at the index indx. Percolate up or down depending upon its
+     * values relative to its parents or child
      * @param indx
      */
     public void deleteNodeAt(int indx) {
@@ -149,9 +150,15 @@ public class ListHeap<T>{
             }
         }
     }
+
+    /**
+     * delete node with specified value
+     * @param val
+     */
     public void deleteNodeWithVal(T val) {
         if(val!=null) {
             int valIndx=-1;
+            // find the index of the node with the specified value
             for(int i=firstNodeIndex(); i<= lastNodeIndex(); i++) {
                 if(val.equals(nodeList.get(i).val)) {
                     valIndx= i;
@@ -225,9 +232,34 @@ public class ListHeap<T>{
         }
     }
     public String toString() {
-        return nodeList.toString();
+        return getString(1,0);
     }
+    private String getTab(int cnt) {
+        String tStr="";
+        for(int i=0; i<cnt*TABSIZE; i++) {
+            tStr+=" ";
+        }
+        return tStr;
+    }
+    public String getString(int ndInd, int tab) {
+        String ret = null;
 
+        if(withinBounds(ndInd)) {
+            StringBuilder strb = new StringBuilder(getTab(tab)+nodeList.get(ndInd));
+            strb.append(System.lineSeparator());
+            int lInd = getLeftChildIndx(ndInd);
+            String lStr= getString(lInd,tab+1);
+            if(lStr!=null) {
+                strb.append(lStr);
+            }
+            String rStr= getString(lInd+1,tab+1);
+            if(rStr!=null) {
+                strb.append(rStr);
+            }
+            ret = strb.toString();
+        }
+        return ret;
+    }
     /**
      * Get the value at root which is maximum or minimum
      * Delete root which reheaps and brings the maximum/ minimum value on top
