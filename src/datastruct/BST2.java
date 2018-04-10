@@ -37,19 +37,13 @@ public class BST2<K extends Comparable> {
     }
 
     BSTNode<K> root;
-    Map<K, BSTNode<K>> nodeData;
 
     public BST2() {
-        nodeData = new HashMap<>();
     }
 
     public void setRoot(BSTNode<K> root) {
         this.root = root;
 
-    }
-
-    private void addNode(BSTNode<K> nd) {
-        nodeData.put(nd.val, nd);
     }
 
     public void insertVals(List<K> vals) {
