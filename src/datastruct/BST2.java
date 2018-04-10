@@ -177,67 +177,6 @@ public class BST2<K extends Comparable> {
         }
     }
 
-    /**
-     * Deletes node from the
-     *
-     * @param parent
-     * @param node
-     * @param leftChild
-     */
-    public void deleteNode2(BSTNode<K> parent, BSTNode<K> node, boolean leftChild) {
-        // need to find either the max child in the left subtree
-        // or min child in the right subtree
-        // if parent of the node to be deleted is null, the node must be root
-        if (parent == null) {
-            root = null;
-        } else if (node != null) {
-            //left subtree is not null
-            if (node.leftChild != null) {
-                // keep track of the parent of the node to be moved
-                BSTNode<K> toMoveP = node;
-                BSTNode<K> toMove = node.leftChild;
-                // at this point toMove!=null
-                while (toMove.rightChild != null) {
-                    toMoveP = toMove;
-                    toMove = toMove.rightChild;
-                }
-                //toMove is the node to be moved
-                //toMoveP is the parent of the node to be moved
-                // copy the values of to Move to node
-                node.val = toMove.val;
-                // toMove right child is null, toMove may have a left child
-                // toMove needs to be deleted. Left child of toMove if any becomes left subchild of parent
-                toMoveP.leftChild = toMove.leftChild;
-            } else if (node.rightChild != null) {
-                // keep track of the parent of the node to be moved
-                BSTNode<K> toMoveP = node;
-                BSTNode<K> toMove = node.rightChild;
-                // at this point toMove!=null
-                while (toMove.leftChild != null) {
-                    toMoveP = toMove;
-                    toMove = toMove.leftChild;
-                }
-                //toMove is the node to be moved
-                //toMoveP is the parent of the node to be moved
-                // copy the values of to Move to node
-                node.val = toMove.val;
-                // toMove left child is null, toMove may have a right child
-                // toMove needs to be deleted. Right child of toMove if any becomes right subchild of parent
-                toMoveP.rightChild = toMove.leftChild;
-
-            }
-            // both the right and left child of the node to be deleted are null
-            else {
-                if (leftChild) {
-                    parent.leftChild = null;
-                } else {
-                    parent.rightChild = null;
-                }
-
-            }
-        }
-    }
-
     public String toString() {
         if(root == null)
             return "Tree:<null>";
