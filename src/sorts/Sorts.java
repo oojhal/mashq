@@ -123,7 +123,6 @@ public class Sorts {
             merge2(src, start, start+numHalf-1, start+numHalf, end);
         }
     }
-
     /**
      * arr contains two sorted subarrays
      * sorted array1 = from start1 to end1
@@ -155,13 +154,13 @@ public class Sorts {
             if(start1> end1) {
                 break;
             }
-            // not crossed the end index of first subrarray. The element at first subarray is bigger than element in second
+            // not reached the end index of first subrarray. The element at first subarray is bigger than element in second
             // start1 <= end1, arr[start1]>= arr[start2]
             // copy the smaller element from the second subarray at the index of the first subrray and move everything to the right
             // element at arr[start2] must be copied to arr[start1]
             while((start2<= end2)&&(arr[start2]<= arr[start1])) {
                 // save the second subarray smaller arr[start2] element
-                // this needs to be inserted at first subrray index
+                // this needs to be inserted at first subrray index start1
                 // there is a hole at start2 so move the element at start2-1 to start2, start2-2 to start2-1...start1 to start1+1
                 // i.e. everything between start1 and start2 is shifted right. This creates a hole at start1.
                 // the elements from start1 to start2-1 to the right one

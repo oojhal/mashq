@@ -19,7 +19,14 @@ public class JDK8Functions {
         System.out.println(testMap);
 
     }
+    public static void testRegex() {
+        System.out.println("some component here".replaceAll("\\bcom\\.[a-zA-Z|$|0-9|.]*|\\borg.[a-zA-Z|$|0-9|.]*",
+            "xxx").trim());
+        System.out.println("some com.oracle.what here".replaceAll("\\bcom\\.[a-zA-Z|$|0-9|.]*|\\borg.[a-zA-Z|$|0-9|.]*",
+            "xxx").trim());
+    }
     public static void main(String[] args) {
+        testRegex();
         mapFunctions();
     }
 }

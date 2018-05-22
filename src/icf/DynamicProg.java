@@ -82,6 +82,7 @@ public class DynamicProg {
         //minCount[i] represents the miniumum number of coins to reach sum i
         int[] minCount = new int[sum + 1];
         // assume input is valid
+        // 1 coin is needed to reach sum equal to each coin value
         for (int i = 0; i < coins.length; i++)
             minCount[coins[i]] = 1;
         if (minCount[sum] > 0) {
@@ -91,6 +92,7 @@ public class DynamicProg {
         // the minimum sum is the smallest coin
         // to reach minimum sum of currSum, find minCount[currSum-coins[i]] and add coin[i]
         // for each i and get the minimum
+        //  already initialized minCount[coin[0]]=1. Assuming coins are sorted
         for (int currSum = coins[0] + 1; currSum <= sum; currSum++) {
             // if the sum count has already been initialized
             if (minCount[currSum] > 0)
@@ -131,6 +133,68 @@ public class DynamicProg {
         int[] coins = new int[]{5, 10, 25};
         printArr(coins, "coin number %d is %d" + System.lineSeparator());
         System.out.println("minimum number of ways to reach value " + sum + " is " + minCoinSum(sum, coins));
+    }
+
+    public static List<List<Integer>> minCoinsForMakingChange(int[] coinVals, int amount) {
+        // minWays[i] = lists of min coins that can make value i
+        // numWays[amount] = lists of min coins that can make value amount
+        // coinVals array contains values of allowed coins
+        List<List<Integer>>[] minWays = new ArrayList[amount + 1];
+        // no coins to make value 0
+        minWays[0] = new ArrayList<>();
+        for (int currAmount = 1; currAmount <= amount; currAmount++) {
+            List<List<Integer>> minCoinLists = null;
+            for (int coinVal : coinVals) {
+                int prevVal = currAmount - coinVal;
+                // reached the currAmount using a singleCoin of coinVal
+                // that's the shortest way. No need to check any further
+                if (prevVal == 0) {
+                    // list with single coin
+                    minCoinLists = new ArrayList(Arrays.asList(Arrays.asList(coinVal)));
+                    break;
+                } else if (prevVal > 0) {
+                    List<List<Integer>> prevValCoinLists = minWays[prevVal];
+                    // get the min list of coins to reach prevVal. if such a list exits
+                    // i.e. there is a way to use the coins to reach prevVal
+                    if ((prevValCoinLists != null) && (!prevValCoinLists.isEmpty())) {
+                        // compare the number of coins with the prevMin number of coins
+                        if (((minCoinLists == null) || (minCoinLists.isEmpty())) || (minCoinLists.get(0).size() > prevValCoinLists.get(0).size() + 1)) {
+                            minCoinLists = new ArrayList();
+                        }
+                        addLists(prevValCoinLists, minCoinLists, coinVal);
+                    }
+                }
+
+            }
+            minWays[currAmount] = minCoinLists;
+        }
+        return minWays[amount];
+    }
+    private static void addLists(List<List<Integer>> sourceLists, List<List<Integer>> destLists, int coinVal) {
+        for(List<Integer> sourceList: sourceLists) {
+            List<Integer> lst = new ArrayList(sourceList);
+            lst.add(coinVal);
+            Collections.sort(lst);
+            if(!destLists.contains(lst)) {
+                destLists.add(lst);
+            }
+        }
+    }
+    public static void testMinCoinsForMakingChange() {
+        int[] coins = new int[] {1,2,3};
+        int amount= 5;
+        System.out.println("Min coin lists to make amount "+amount+" using allowed coins: "+Arrays.toString(coins)+ " is "+minCoinsForMakingChange(coins, amount));
+        amount = 4;
+        System.out.println("Min coin lists to make amount "+amount+" using allowed coins: "+Arrays.toString(coins)+ " is "+minCoinsForMakingChange(coins, amount));
+        coins = new int[] {1,2,3};
+        amount= 5;
+        System.out.println("Min coin lists to make amount "+amount+" using allowed coins: "+Arrays.toString(coins)+ " is "+minCoinsForMakingChange(coins, amount));
+        coins = new int[] {1,2,3,4};
+        amount= 9;
+        System.out.println("Min coin lists to make amount "+amount+" using allowed coins: "+Arrays.toString(coins)+ " is "+minCoinsForMakingChange(coins, amount));
+        coins = new int[] {3};
+        amount= 4;
+        System.out.println("Min coin lists to make amount "+amount+" using allowed coins: "+Arrays.toString(coins)+ " is "+(minCoinsForMakingChange(coins, amount)==null? "none":minCoinsForMakingChange(coins, amount)));
     }
 
     public static List<Integer> maxIncrSequence(int[] seq) {
@@ -802,67 +866,7 @@ public class DynamicProg {
         return numWays[numStairs];
     }
 
-    public static List<List<Integer>> minCoinsForMakingChange(int[] coinVals, int amount) {
-        // minWays[i] = lists of min coins that can make value i
-        // numWays[amount] = lists of min coins that can make value amount
-        // coinVals array contains values of allowed coins
-        List<List<Integer>>[] minWays = new ArrayList[amount + 1];
-        // no coins to make value 0
-        minWays[0] = new ArrayList<>();
-        for (int currAmount = 1; currAmount <= amount; currAmount++) {
-            List<List<Integer>> minCoinLists = null;
-            for (int coinVal : coinVals) {
-                int prevVal = currAmount - coinVal;
-                // reached the currAmount using a singleCoin of coinVal
-                // that's the shortest way. No need to check any further
-                if (prevVal == 0) {
-                    // list with single coin
-                    minCoinLists = new ArrayList(Arrays.asList(Arrays.asList(coinVal)));
-                    break;
-                } else if (prevVal > 0) {
-                    List<List<Integer>> prevValCoinLists = minWays[prevVal];
-                    // get the min list of coins to reach prevVal. if such a list exits
-                    // i.e. there is a way to use the coins to reach prevVal
-                    if ((prevValCoinLists != null) && (!prevValCoinLists.isEmpty())) {
-                        // compare the number of coins with the prevMin number of coins
-                        if (((minCoinLists == null) || (minCoinLists.isEmpty())) || (minCoinLists.get(0).size() > prevValCoinLists.get(0).size() + 1)) {
-                            minCoinLists = new ArrayList();
-                        }
-                        addLists(prevValCoinLists, minCoinLists, coinVal);
-                    }
-                }
 
-            }
-            minWays[currAmount] = minCoinLists;
-        }
-        return minWays[amount];
-    }
-    private static void addLists(List<List<Integer>> sourceLists, List<List<Integer>> destLists, int coinVal) {
-        for(List<Integer> sourceList: sourceLists) {
-            List<Integer> lst = new ArrayList(sourceList);
-            lst.add(coinVal);
-            Collections.sort(lst);
-            if(!destLists.contains(lst)) {
-                destLists.add(lst);
-            }
-        }
-    }
-    public static void testMinCoinsForMakingChange() {
-        int[] coins = new int[] {1,2,3};
-        int amount= 5;
-        System.out.println("Min coin lists to make amount "+amount+" using allowed coins: "+Arrays.toString(coins)+ " is "+minCoinsForMakingChange(coins, amount));
-        amount = 4;
-        System.out.println("Min coin lists to make amount "+amount+" using allowed coins: "+Arrays.toString(coins)+ " is "+minCoinsForMakingChange(coins, amount));
-        coins = new int[] {1,2,3};
-        amount= 5;
-        System.out.println("Min coin lists to make amount "+amount+" using allowed coins: "+Arrays.toString(coins)+ " is "+minCoinsForMakingChange(coins, amount));
-        coins = new int[] {1,2,3,4};
-        amount= 9;
-        System.out.println("Min coin lists to make amount "+amount+" using allowed coins: "+Arrays.toString(coins)+ " is "+minCoinsForMakingChange(coins, amount));
-        coins = new int[] {3};
-        amount= 4;
-        System.out.println("Min coin lists to make amount "+amount+" using allowed coins: "+Arrays.toString(coins)+ " is "+(minCoinsForMakingChange(coins, amount)==null? "none":minCoinsForMakingChange(coins, amount)));
-    }
     public static void testNumWaysToClimb() {
         int[] allowedSteps = new int[] {1,2};
         int numStairs = 5;

@@ -31,6 +31,9 @@ public class GenTest
             sum += val.doubleValue();
         return sum;
     }
+    static <T> void whatever(List<T> ls) {
+        System.out.println("whatver:"+ls);
+    }
     private static void typeTest()
     {
 
@@ -58,6 +61,7 @@ public class GenTest
 
     public static void main(String args[])
     {
+        whatever(new ArrayList<Integer>());
         typeTest();
         List<Double> vals = Arrays.asList(new Double(1.0),new Double(3.0));
         System.out.println("double sum="+sumNum(vals));
