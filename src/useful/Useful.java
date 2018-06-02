@@ -1,5 +1,6 @@
 package useful;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -83,28 +84,58 @@ public class Useful {
         }
         System.out.println(stk);
 
+        // fill values in an array
         int[] vals = new int[6];
         Arrays.fill(vals,0);
         Arrays.stream(vals).forEach((n)-> System.out.print(n+","));
         Arrays.fill(vals,0,3,1);
         Arrays.stream(vals).forEach((n)-> System.out.print(n+","));
 
-        Map<Character,Integer> ordMap = new TreeMap<>();
-        ordMap.put('a',1);
-        ordMap.put('c',3);
-        ordMap.put('b',2);
-        System.out.println(ordMap);
+    }
+    static void colls() {
+        Map<Character,Integer> keyOrd = new TreeMap<>();
+        keyOrd.put('a',1);
+        keyOrd.put('c',3);
+        keyOrd.put('b',2);
+        // values printed in the order of keys
+        // prints: {a=1, b=2, c=3}
+        System.out.println("keyOrd: "+keyOrd);
+
+
+
+        Map<Character,Integer> insertOrd = new LinkedHashMap<>();
+        insertOrd.put('d',4);
+        insertOrd.put('a',1);
+        insertOrd.put('c',3);
+        // insertOrd:{d=4, a=1, c=3}
+        System.out.println("insertOrd:" + insertOrd);
+
+        Map<Character,Integer> accessOrd = new LinkedHashMap<>(10,0.75f, true);
+        accessOrd.put('d',4);
+        accessOrd.put('a',1);
+        accessOrd.put('c',3);
+        accessOrd.get('a');
+        accessOrd.get('d');
+        // accessOrd: {c=3, a=1, d=4}
+        System.out.println("accessOrd: "+accessOrd);
+
 
         Set<Integer> ordSet = new TreeSet<>();
 
         ordSet.addAll(Arrays.asList(5,3,12,5,1,0));
-        System.out.println(ordSet);
+        // keyOrd Set: [0, 1, 3, 5, 12]
+        System.out.println("keyOrd Set: "+ ordSet);
+
         Set<Integer> lSet = new LinkedHashSet<>();
         lSet.addAll(Arrays.asList(5,3,12,5,1,0));
-        System.out.println(lSet);
-        Iterator<Integer> it = lSet.iterator();
-
-        Map<Character,Integer> cMap = new LinkedHashMap<>();
+        // insertOrd Set:[5, 3, 12, 1, 0]
+        System.out.println("insertOrd Set:"+ lSet);
+    }
+    static void modifyMapWhileIterating() {
+        Map<Character,Integer> ordMap = new TreeMap<>();
+        ordMap.put('a',1);
+        ordMap.put('c',3);
+        ordMap.put('b',2);
         System.out.println("********");
         try {
             // the loop below will throw exception as the map is modified while it is being iterated over
@@ -119,12 +150,15 @@ public class Useful {
         System.out.println(ordMap);
 
         Iterator<Map.Entry<Character,Integer>> iter = ordMap.entrySet().iterator();
+        // works
         while(iter.hasNext()) {
             Map.Entry<Character,Integer> entry = iter.next();
             System.out.println(entry.getKey()+":"+entry.getValue());
-            ordMap.put((char) (entry.getKey().charValue()+10) ,entry.getValue()+1);
+            // ordMap.put((char) (entry.getKey().charValue()+10) ,entry.getValue()+1);
+            ordMap.put(entry.getKey() ,entry.getValue()+1);
         }
         System.out.println(ordMap);
+
     }
     static void getOccuringChar(String str)
     {
@@ -153,8 +187,9 @@ public class Useful {
         Arrays.stream(arr).forEach((ob)-> System.out.print(ob+","));
     }
     public static void main(String[] args) {
-        // collectionTest();
-        testCharCount();
+       //  collectionTest();
+       // testCharCount();
+        colls();
     }
 }
 

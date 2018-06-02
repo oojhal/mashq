@@ -26,7 +26,7 @@ public class BST<T> extends BinaryTree<T> {
         return tree;
     }
 
-    public BST populateTree(List<T> treeArr, int starti, int endi) {
+    public BST populateTree2(List<T> treeArr, int starti, int endi) {
         BST rnode=null;
         if(starti<=endi) {
             if(starti==endi) {
@@ -40,6 +40,20 @@ public class BST<T> extends BinaryTree<T> {
                 rnode.leftChild = populateTree(treeArr,starti,midi-1);
                 rnode.rightChild = populateTree(treeArr,midi+1,endi);
             }
+        }
+        return rnode;
+    }
+    public BST populateTree(List<T> treeArr, int starti, int endi) {
+        BST rnode=null;
+        if(starti<=endi) {
+            // also takes care of start == endi test case since
+            // midi = (start+end+1)/2 = [(2*start)+1]/2 = start
+            //  leftChild = populateTree(treeArr, start, midi-1) =>  populateTree(treeArr, start, start-1)
+            //  rightChild =
+                int midi= (endi+starti+1)/2;
+                rnode= new BST(midi,treeArr.get(midi));
+                rnode.leftChild = populateTree(treeArr,starti,midi-1);
+                rnode.rightChild = populateTree(treeArr,midi+1,endi);
         }
         return rnode;
     }

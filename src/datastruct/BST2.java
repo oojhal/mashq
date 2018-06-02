@@ -10,7 +10,7 @@ import java.util.Map;
  * Handles:
  * http://www.mathcs.emory.edu/~cheung/Courses/171/Syllabus/9-BinTree/BST-delete2.html
  */
-public class BST2<K extends Comparable> {
+public class BST2<K extends Comparable<K>> {
     private static int TABSIZE = 3;
 
     public static class BSTNode<K> {

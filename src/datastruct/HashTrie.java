@@ -54,11 +54,12 @@ public class HashTrie {
         root.children = new HashMap<>();
     }
 
-    public void addString(String word) {
-        addString(word,root.children);
-    }
     public void addStrings(List<String> strs) {
         strs.forEach((str)-> addString(str));
+    }
+
+    public void addString(String word) {
+        addString(word,root.children);
     }
 
     /**

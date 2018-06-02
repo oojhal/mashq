@@ -13,7 +13,7 @@ import java.util.Arrays;
  * Creates a heap of values T. The heap is stored in a list
  * with the root node at index 1.
  */
-public class ListHeap<T>{
+public class ListHeap<T extends Comparable<T>>{
     private static int TABSIZE=3;
     public static class Node<T>{
         T val;
@@ -38,6 +38,9 @@ public class ListHeap<T>{
     // list of nodes in the heap. The list starts from
     // index 0
     private List<Node<T>> nodeList;
+    public ListHeap(int sz) {
+        this(sz, Comparator.<T>naturalOrder());
+    }
     public ListHeap(int sz, Comparator<T> cmp) {
         nodeList = new ArrayList<Node<T>>(sz+1);
         // null or dummy node at index 0
@@ -275,7 +278,7 @@ public class ListHeap<T>{
     }
     public static void heapTest() {
         List<Integer> list = Arrays.asList(10,2,12,4,9,23);
-        ListHeap<Integer> maxHeap = new ListHeap<Integer>(list.size(), Comparator.<Integer>naturalOrder());
+        ListHeap<Integer> maxHeap = new ListHeap<Integer>(list.size());
         maxHeap.addVals(list);
         System.out.println(maxHeap);
         maxHeap.deleteNodeWithVal(12);

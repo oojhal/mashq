@@ -46,13 +46,20 @@ public class GraphLinkedList {
     }
     public boolean areLinked(int node1, int node2) {
         boolean reachable=false;
+        // keeps track of nodes in breadth first search starting from node1
+        // once a node is processed it is replaced by its adjacent nodes
         Queue<Node> q1= new LinkedList<Node>();
+        // keeps track of nodes in breadth first search starting from node2
         Queue<Node> q2= new LinkedList<Node>();
+        // keeps track of nodes that are reachable when starting from node1
         Map<Node,String> col1= new HashMap<Node,String>();
+        // keeps track of nodes that are reachable when starting from node1
         Map<Node,String> col2= new HashMap<Node,String>();
+        // q1 starts with node1
         q1.add(graph[node1]);
+        // q2 starts with node 2
         q2.add(graph[node2]);
-        while((!q1.isEmpty())&&(!q2.isEmpty())) {
+        while((!q1.isEmpty())||(!q2.isEmpty())) {
             if(!q1.isEmpty()) {
                 reachable = searchStep(q1, col1, col2, 1);
             }
@@ -70,6 +77,22 @@ public class GraphLinkedList {
         return reachable;
     }
 
+    /**
+     * Processes the node at the front of 'q' by removing it.
+     * process the node if it hasn't already been visited
+     * check to see if the node occurs in the list of nodes reachable from the other path
+     * if so then path exists from this node to other node
+     * otherwise mark the node as visited and put the node in the collection of nodes reachable
+     * at current path
+     * replace the node with its children that are not already in the q and has not been visited
+     *
+     * @param q
+     * @param myCol
+     * @param otherCol
+     * @param pathId
+     * @return
+     */
+
     public boolean searchStep(Queue<Node> q, Map<Node, String> myCol, Map<Node, String> otherCol, int pathId) {
         boolean reachable = false;
         Node nd = q.remove();
@@ -80,6 +103,7 @@ public class GraphLinkedList {
                 nd.setVisited(pathId);
                 myCol.put(nd, "p");
                 for (Node child : nd.children) {
+                    // add child to q only if it is not already there
                     if (!q.contains(child)) {
                         q.add(child);
                     }
@@ -163,6 +187,13 @@ public class GraphLinkedList {
         public void setVisited(int pathId) {
             visitedMap.put(pathId,true);
         }
+
+        /**
+         * keeps track of whether a node was visited from a specified path id
+         * path id indicates a specific start node
+         * @param pathId
+         * @return
+         */
         public boolean getVisited(int pathId) {
             return (visitedMap.get(pathId)!=null);
         }
@@ -188,7 +219,7 @@ public class GraphLinkedList {
             return strb.toString();
         }
     }
-    public static void main(String[] args) {
+    public static void test1() {
         int[][] edges =
             {
                 {0,0,1,1,0,0},
@@ -197,12 +228,12 @@ public class GraphLinkedList {
                 {1,1,1,0,0,0},
                 {0,0,0,0,0,1},
                 {0,0,0,0,1,0}
-        };
+            };
         GraphLinkedList pls = new GraphLinkedList(edges.length);
         pls.addEdges(edges);
         System.out.println(pls.toString(false));
         System.out.println("********DFS*********************");
-//        pls.DFS();
+//      pls.DFS();
         pls.clearVisited();
         System.out.println("********BFS*********************");
         pls.BFS();
@@ -210,5 +241,35 @@ public class GraphLinkedList {
         System.out.println(pls.areLinked(0,1));
         System.out.println(pls.areLinked(4,5));
         System.out.println(pls.areLinked(0,5));
+    }
+    public static void test2() {
+        int[][] edges =
+            {
+                {0,1,0,0,0,0}, //0
+                {0,0,1,0,0,0}, //1
+                {0,0,0,1,0,0}, //2
+                {0,0,0,0,1,0}, //3
+                {0,0,0,0,0,0}, //4
+                {0,0,0,0,0,0}  //5
+            };
+        GraphLinkedList pls = new GraphLinkedList(edges.length);
+        pls.addEdges(edges);
+        System.out.println(pls.toString(false));
+        System.out.println("********DFS*********************");
+//      pls.DFS();
+        pls.clearVisited();
+        System.out.println("********BFS*********************");
+        pls.BFS();
+        pls.clearVisited();
+        System.out.println(pls.areLinked(5,4));
+        System.out.println(pls.areLinked(0,1));
+        System.out.println(pls.areLinked(4,5));
+        System.out.println(pls.areLinked(0,4));
+        System.out.println(pls.areLinked(5,0));
+
+    }
+    public static void main(String[] args) {
+        //test1();
+        test2();
     }
 }

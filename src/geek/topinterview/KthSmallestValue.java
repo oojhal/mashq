@@ -9,7 +9,7 @@ import java.util.Arrays;
  * Created by ssiddiqu on 4/4/18.
  */
 public class KthSmallestValue{
-    public  static <K extends Comparable> K findKthSmallestValue(List<K> vals, int k) {
+    public  static <K extends Comparable<K>> K findKthSmallestValue(List<K> vals, int k) {
         Comparator<K> cmp = Comparator.<K>naturalOrder();
         ListHeap<K> lHeap = new ListHeap<K>(k, cmp);
         // kth value will be at index k-1
