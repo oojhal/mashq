@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="issues">
+    <option name="index">
+      <map>
+        <entry key="$MAVEN_REPOSITORY$/com/oracle/mcps/metadata-daodto/1825.5-SNAPSHOT/metadata-daodto-1825.5-SNAPSHOT.jar!/com/oracle/mcps/metadata/dto/query/CriteriaOperator.class">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/mcps/mcps-metadata-daodto/pom.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/mcps/mcps-metadata-daodto/src/main/java/com/oracle/mcps/metadata/Constants.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/mcps/mcps-metadata-daoimpl/pom.xml">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/mcps/mcps-metadata-daoimpl/src/main/java/com/oracle/mcps/metadata/common/filter/QueryCriteriaEvaluator.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/mcps/mcps-metadata-daoimpl/src/main/java/com/oracle/mcps/metadata/daoimpl/hbase/common/BaseDAOHBaseImpl.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/mcps/mcps-metadata-daoimpl/src/test/java/com/oracle/mcps/metadata/common/filter/QueryFilterTest.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/mcps/mcps-metadata-daoimpl/src/test/java/com/oracle/mcps/metadata/common/filter/QueryFilterTest2.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/mcps/mcps-metadata-daoimpl/src/test/java/com/oracle/mcps/metadata/dao/DAOFilterTest.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="$USER_HOME$/mcps/mcps-metadata-daoimpl/src/test/java/com/oracle/mcps/metadata/dao/DAOFilterTestNew.java">
+          <value>
+            <set />
+          </value>
+        </entry>
+        <entry key="/a.dummy">
+          <value>
+            <set />
+          </value>
+        </entry>
+      </map>
+    </option>
+  </component>
+</project>
